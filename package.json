@@ -1,0 +1,23 @@
+{
+  "name": "pizdelka",
+  "version": "1.0.0",
+  "description": "бот который пиздит",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/relathyme/pizdelka.git"
+  },
+  "author": "relathyme",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/relathyme/pizdelka/issues"
+  },
+  "homepage": "https://github.com/relathyme/pizdelka#readme",
+  "dependencies": {
+    "eris": "^0.15.1",
+    "node-fetch": "^2.6.5"
+  }
+}
