@@ -1,25 +1,23 @@
 const Eris = require("eris")
 const fetch = require("node-fetch")
-const client = new Eris.Client(require("./config.json").token)
-client.options.allowedMentions.everyone = false
-client.options.allowedMentions.roles = false
-client.options.allowedMentions.users = false
-client.options.allowedMentions.repliedUser = true
+const config = require("./config.json")
+const client = new Eris.Client(config.token)
+client.options.allowedMentions.replied_user = true
 
-let limit = 10000
+let limit = 100
 let messages = []
 
 client.on("ready", () => {
     console.log("I'm ready!")
 })
 .on("messageCreate", async message => {
-    if(message.content == "p!zdelka" && message.author.id == client.user.id) {
+    if(message.content == "пиздеть" && message.author.id == client.user.id) {
         if(!client.pizdelka){
-            await message.channel.createMessage("собираем мусор")
+            console.log("fetching messages...")
             let start = Date.now()
-            messages = await message.channel.getMessages({limit}).catch(async e => await message.channel.createMessage(`:warning: пошел нахуй \n\`\`\`${e.message}\`\`\``))
+            messages = await message.channel.getMessages({limit}).catch(console.error)
             limit = messages.length
-            await message.channel.createMessage(`я могу пиздеть ура (${limit} за ${(Date.now()-start)/1000} сек)`)
+            console.log(`fetched ${limit} msgs in ${(Date.now()-start)/1000} sec`)
             client.pizdelka = true
             client.pizdelkaid = message.channel.id
         }else if(client.pizdelka){
@@ -28,7 +26,7 @@ client.on("ready", () => {
             delete client.pizdelkaid
         }
     }
-    else if(client.pizdelka && message.author.id != client.user.id && client.pizdelkaid == message.channel.id){
+    else if(client.pizdelka && message.author.id != client.user.id && client.pizdelkaid == message.channel.id && (!config.users.length || config.users.includes(message.author.id))){
         const msg = messages[Math.floor(Math.random()*(limit+1))]
         let file = []
         if(msg.attachments.length) for(const attach of msg.attachments){
@@ -38,7 +36,7 @@ client.on("ready", () => {
             })
         }
         await client.createMessage(message.channel.id, {content: msg.content, embed: msg.embed,
-            messageReference: {channelID: message.channel.id, guildID: message.channel.guild.id, messageID: message.id}}, file).catch(() => void 0)
+            messageReference: {channelID: message.channel.id, guildID: message.channel.guild.id, messageID: message.id}}, file).catch(console.error)
     }
 })
 
