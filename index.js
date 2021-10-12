@@ -4,7 +4,7 @@ const config = require("./config.json")
 const client = new Eris.Client(config.token)
 client.options.allowedMentions.replied_user = true
 
-let limit = 100
+let limit = config.limit
 let messages = []
 
 client.on("ready", () => {
