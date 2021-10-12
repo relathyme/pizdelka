@@ -11,7 +11,7 @@ client.on("ready", () => {
     console.log("I'm ready!")
 })
 .on("messageCreate", async message => {
-    if(message.content == "пиздеть" && message.author.id == client.user.id) {
+    if(message.content == config.phrase && message.author.id == client.user.id) {
         if(!client.pizdelka){
             console.log("fetching messages...")
             let start = Date.now()
@@ -27,7 +27,7 @@ client.on("ready", () => {
         }
     }
     else if(client.pizdelka && message.author.id != client.user.id && client.pizdelkaid == message.channel.id && (!config.users.length || config.users.includes(message.author.id))){
-        const msg = messages[Math.floor(Math.random()*(limit+1))]
+        const msg = messages[Math.floor(Math.random()*limit)]
         let file = []
         if(msg.attachments.length) for(const attach of msg.attachments){
             file.push({
