@@ -11,7 +11,7 @@ client.on("ready", () => {
     console.log("I'm ready!")
 })
 .on("messageCreate", async message => {
-    if(message.content == config.phrase && message.author.id == client.user.id) {
+    if(message.content == config.phrase && (message.author.id == client.user.id || message.author.id == config.owner)) {
         if(!client.pizdelka){
             console.log("fetching messages...")
             let start = Date.now()
