@@ -15,9 +15,10 @@ client.on("ready", () => {
         if(!client.pizdelka){
             console.log("fetching messages...")
             let start = Date.now()
-            messages = await message.channel.getMessages({limit}).catch(console.error)
+            let channel = client.getChannel(config.channel) || message.channel
+            messages = await channel.getMessages({limit}).catch(console.error)
             limit = messages.length
-            console.log(`fetched ${limit} msgs in ${(Date.now()-start)/1000} sec`)
+            console.log(`fetched ${limit} from ${channel.name} msgs in ${(Date.now()-start)/1000} sec`)
             client.pizdelka = true
             client.pizdelkaid = message.channel.id
         }else if(client.pizdelka){
