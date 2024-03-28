@@ -32,7 +32,7 @@ client.on("ready", () => {
         let file = []
         if(msg.attachments.length) for(const attach of msg.attachments){
             file.push({
-                name: attach.url.slice(attach.url.lastIndexOf("/")),
+                name: attach.url.split("?")[0].slice(attach.url.lastIndexOf("/")).slice(1),
                 file: await fetch(attach.url).then(r => r.buffer())
             })
         }
