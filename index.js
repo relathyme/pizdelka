@@ -40,5 +40,6 @@ client.on("ready", () => {
             messageReference: {channelID: message.channel.id, guildID: message.channel.guild.id, messageID: message.id}}, file).catch(console.error)
     }
 })
+.on("error", console.error)
 
 client.connect().then(() => client.emit("ready"))
