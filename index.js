@@ -7,7 +7,7 @@ client.options.allowedMentions.replied_user = true
 let limit = config.limit
 let messages = []
 
-client.on("ready", () => {
+client.once("ready", () => {
     console.log("I'm ready!")
 })
 .on("messageCreate", async message => {
