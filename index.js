@@ -75,5 +75,6 @@ client.once("ready", () => {
     }
 })
 .on("error", console.error)
+process.on("uncaughtException", console.error).on("unhandledRejection", console.error)
 
 client.connect().then(() => client.emit("ready"))
