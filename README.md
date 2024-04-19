@@ -10,6 +10,7 @@
   "phrase": "phrase to activate/deactivate",
   "owner": "yourid",
   "users": ["user id to talk with", "or leave empty to talk with all", "..."],
-  "channel": "channel ID to fetch messages from or leave empty to fetch from channel where it was used"
+  "channel": "channel ID to fetch messages from or leave empty to fetch from channel where it was used",
+  "prefix": "prefix for eval and exec commands"
 }
 ```
