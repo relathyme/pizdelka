@@ -35,6 +35,16 @@ client.once("ready", () => {
             messages = await channel.getMessages({limit}).catch(console.error)
             limit = messages.length
             console.log(`fetched ${limit} msgs from ${channel.name} in ${(Date.now()-start)/1000} sec`)
+            console.log("caching attachments...")
+            const amessages=messages.filter(m=>m.attachments.length>0)
+            for(msg of amessages){
+                for(attachment of msg.attachments){
+                    let file=await fetch(attachment.url).then(r=>r.arrayBuffer())
+                    file=Buffer.from(file)
+                    fs.writeFileSync(cachedir+"/"+attachment.id, file)
+                    console.log(`cached attachments ${amessages.indexOf(msg)+1}/${amessages.length}`)
+                }
+            }
             client.pizdelka = true
             client.pizdelkaid = message.channel.id
         }else if(client.pizdelka){
@@ -46,10 +56,10 @@ client.once("ready", () => {
     else if(client.pizdelka && message.author.id != client.user.id && client.pizdelkaid == message.channel.id && (!config.users.length || config.users.includes(message.author.id))){
         const msg = messages[Math.floor(Math.random()*limit)]
         let file = []
-        if(msg.attachments.length) for(const attach of msg.attachments){
+        if(msg.attachments.length) for(const attachment of msg.attachments){
             file.push({
-                name: attach.url.split("?")[0].slice(attach.url.lastIndexOf("/")).slice(1),
-                file: await fetch(attach.url).then(r => r.buffer())
+                name: attachment.url.split("?")[0].slice(attachment.url.lastIndexOf("/")).slice(1),
+                file: fs.readFileSync(cachedir+"/"+attachment.id)
             })
         }
         await client.createMessage(message.channel.id, {content: msg.content, embed: msg.embed,
