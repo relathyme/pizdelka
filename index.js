@@ -1,4 +1,6 @@
 const Eris = require("eris")
+const fs=require("fs")
+const cachedir=require("os").tmpdir()+"/pizdelka-cache"
 const config = require("./config.json")
 const client = new Eris.Client(config.token)
 client.options.allowedMentions.replied_user = true
@@ -18,6 +20,10 @@ function u(){
 client.once("ready", () => {
     u()
     setInterval(u, 60000)
+    if(fs.existsSync(cachedir)){
+        fs.rmSync(cachedir, {recursive: true})
+    }
+    fs.mkdirSync(cachedir)
     console.log("I'm ready!")
 })
 .on("messageCreate", async message => {
