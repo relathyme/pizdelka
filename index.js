@@ -1,5 +1,4 @@
 const Eris = require("eris")
-const fetch = require("node-fetch")
 const config = require("./config.json")
 const client = new Eris.Client(config.token)
 client.options.allowedMentions.replied_user = true
