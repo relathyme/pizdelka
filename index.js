@@ -23,6 +23,7 @@ client.once("ready", () => {
             client.pizdelkaid = message.channel.id
         }else if(client.pizdelka){
             messages = []
+            limit=config.limit
             delete client.pizdelka
             delete client.pizdelkaid
         }
