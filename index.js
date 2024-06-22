@@ -8,18 +8,7 @@ client.options.allowedMentions.replied_user = true
 let limit = config.limit
 let messages = []
 
-function u(){
-    let uptime=require("os").uptime()
-    let m=Math.floor(uptime/60%60)
-    let h=Math.floor(uptime/60/60%24)
-    let d=Math.floor(uptime/60/60/24)
-    const name=`for ${d}d ${h}h ${m}m`
-    return client.editStatus("online", {name})
-}
-
 client.once("ready", () => {
-    u()
-    setInterval(u, 60000)
     if(fs.existsSync(cachedir)){
         fs.rmSync(cachedir, {recursive: true})
     }
