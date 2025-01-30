@@ -1,12 +1,19 @@
 const Eris = require("eris")
-const fs=require("fs")
-const cachedir=require("os").tmpdir()+"/pizdelka-cache"
+const Markov = require('markov-strings').default
 const config = require("./config.json")
 const client = new Eris.Client(config.token)
 client.options.allowedMentions.replied_user = true
 
-let limit = config.limit
-let messages = []
+const markov = new Markov({ stateSize: config.stateSize })
+
+const messages = require("./data.json")
+let markov_options = {
+    maxTries: 100,
+    prng: Math.random,
+    filter: (result) => {
+        return result.string.split(' ').length >= 10
+    }
+}
 
 function u(){
     let uptime=require("os").uptime()
@@ -20,44 +27,24 @@ function u(){
 client.once("ready", () => {
     u()
     setInterval(u, 60000)
-    if(fs.existsSync(cachedir)){
-        fs.rmSync(cachedir, {recursive: true})
-    }
-    fs.mkdirSync(cachedir)
     console.log("I'm ready!")
 })
 .once("shardReady", async () => {
-    console.log("fetching messages...")
-    let start = Date.now()
-    let channel = client.getChannel(config.channel_from)
-    messages = await channel.getMessages({limit}).catch(console.error)
-    limit = messages.length
-    console.log(`fetched ${limit} msgs from ${channel.name} in ${(Date.now()-start)/1000} sec`)
-    console.log("caching attachments...")
-    const amessages=messages.filter(m=>m.attachments.length>0)
-    for(msg of amessages){
-        for(attachment of msg.attachments){
-            let file=await fetch(attachment.url).then(r=>r.arrayBuffer())
-            file=Buffer.from(file)
-            fs.writeFileSync(cachedir+"/"+attachment.id, file)
-            console.log(`cached attachments ${amessages.indexOf(msg)+1}/${amessages.length}`)
-        }
-    }
+    console.log("initializing markov chain...")
+    markov.addData(messages)
+    console.log("data imported")
     client.pizdelka = true
     client.pizdelkaid = config.channel_to
 })
 .on("messageCreate", async message => {
     if(client.pizdelka && message.author.id != client.user.id && client.pizdelkaid == message.channel.id && (!config.users.length || config.users.includes(message.author.id))){
-        const msg = messages[Math.floor(Math.random()*limit)]
-        let file = []
-        if(msg.attachments.length) for(const attachment of msg.attachments){
-            file.push({
-                name: attachment.url.split("?")[0].slice(attachment.url.lastIndexOf("/")).slice(1),
-                file: fs.readFileSync(cachedir+"/"+attachment.id)
-            })
+        try{
+            const msg = markov.generate(markov_options)
+            await client.createMessage(message.channel.id, {content: msg.string,
+                messageReference: {channelID: message.channel.id, guildID: message.channel.guild.id, messageID: message.id}}).catch(console.error)
+        }catch(error){
+            console.log(error)
         }
-        await client.createMessage(message.channel.id, {content: msg.content, embed: msg.embed,
-            messageReference: {channelID: message.channel.id, guildID: message.channel.guild.id, messageID: message.id}}, file).catch(console.error)
     }
 })
 .on("messageCreate", async message => {

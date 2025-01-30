@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/relathyme/pizdelka#readme",
   "dependencies": {
-    "eris": "^0.15.1"
+    "eris": "^0.15.1",
+    "markov-strings": "^3.0.2"
   }
 }

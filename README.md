@@ -11,6 +11,7 @@
   "users": ["user id to talk with", "or leave empty to talk with all", "..."],
   "channel_from": "channel ID to fetch messages from",
   "channel_to": "channel ID to post messages",
-  "prefix": "prefix for eval and exec commands"
+  "prefix": "prefix for eval and exec commands",
+  "stateSize": 2
 }
 ```
