@@ -11,7 +11,8 @@ let markov_options = {
     maxTries: config.maxTries,
     prng: Math.random,
     filter: (result) => {
-        return result.string.split(' ').length >= config.minWords
+        const result_array = result.string.split(' ')
+        return (result_array.length >= config.minWords) & (result_array[result_array.length - 1].length > 2)
     }
 }
 
@@ -44,6 +45,7 @@ client.once("ready", () => {
                 messageReference: {channelID: message.channel.id, guildID: message.channel.guild.id, messageID: message.id}}).catch(console.error)
         }catch(error){
             console.log(error)
+            client.addMessageReaction(message.channel.id, message.id, "❌")
         }
     }
 })
