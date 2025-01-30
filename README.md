@@ -12,6 +12,8 @@
   "channel_from": "channel ID to fetch messages from",
   "channel_to": "channel ID to post messages",
   "prefix": "prefix for eval and exec commands",
-  "stateSize": 2
+  "stateSize": 2,
+  "maxTries": 100,
+  "minWords": 3
 }
 ```

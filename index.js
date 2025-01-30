@@ -8,10 +8,10 @@ const markov = new Markov({ stateSize: config.stateSize })
 
 const messages = require("./data.json")
 let markov_options = {
-    maxTries: 100,
+    maxTries: config.maxTries,
     prng: Math.random,
     filter: (result) => {
-        return result.string.split(' ').length >= 10
+        return result.string.split(' ').length >= config.minWords
     }
 }
 
