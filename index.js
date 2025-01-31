@@ -2,7 +2,6 @@ const Eris = require("eris")
 const Markov = require('markov-strings').default
 const config = require("./config.json")
 const client = new Eris.Client(config.token)
-client.options.allowedMentions.replied_user = true
 
 const markov = new Markov({ stateSize: config.stateSize })
 
@@ -42,10 +41,10 @@ client.once("ready", () => {
         try{
             const msg = markov.generate(markov_options)
             await client.createMessage(message.channel.id, {content: msg.string,
-                messageReference: {channelID: message.channel.id, guildID: message.channel.guild.id, messageID: message.id}}).catch(console.error)
+                messageReference: {channelID: message.channel.id, guildID: message.channel.guild.id, messageID: message.id},
+                allowedMentions: {everyone: false, roles: [], users: [message.author.id], repliedUser: true}}).catch(console.error)
         }catch(error){
             console.log(error)
-            client.addMessageReaction(message.channel.id, message.id, "❌")
         }
     }
 })
